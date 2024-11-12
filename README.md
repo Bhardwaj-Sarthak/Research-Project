@@ -7,4 +7,5 @@ This project includes our research on "Modelling Reading Comprehension with Mach
 
 --
 ## Sarthak
---
+- Explore Word2vec
+- Explore NLTK

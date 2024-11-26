@@ -1,12 +1,13 @@
 # Research-Project
 This project includes our research on "Modelling Reading Comprehension with Machine Learning and Psychometrics"
 # Timeline
-18/11 paper reading
+- 13/11-20/11: Receiving data + Basic concepts literature review
+- 20/11-4/12: In depth literature review about embeddings and models
+- 4/12-18/12: Implementation on python of different embeddings techniques
+- 18/12-29/01: Implementation on python of different models to estimate  ~ item difficulty (eventually also item discrimination)
+- 29/01-7/02: Finalizing the project and final presentation
+- 7/02-31/03: Writing final report
 
-- Till Dec ~ Literature Review
-- Till End jan ~ Run Models and collet results
-- Feb 7 ~ Present Results
-- 31 march ~ Write Paper
 # Important Notes
 ## Jenny 
 
@@ -19,6 +20,8 @@ This project includes our research on "Modelling Reading Comprehension with Mach
 This document provides a ranked list of open-source models for generating text embeddings for German text. The models are ranked from best to worst in terms of average performance, with a focus on semantic tasks such as similarity, clustering, and classification.
 
 ## Model Rankings
+
+~ hugging face language model leaderboard link - https://huggingface.co/spaces/mteb/leaderboard
 
 | Rank | Model Name                                         | Framework            | Type                          | Notes                                                                                                  |
 |------|----------------------------------------------------|----------------------|-------------------------------|--------------------------------------------------------------------------------------------------------|

@@ -15,6 +15,8 @@ This project includes our research on "Modelling Reading Comprehension with Mach
 ## Sarthak
 - Explore Word2vec
 - Explore NLTK
+- Interesting Papers to read
+  -- https://arxiv.org/pdf/2401.02709
 # German Text Embedding Models
 
 This document provides a ranked list of open-source models for generating text embeddings for German text. The models are ranked from best to worst in terms of average performance, with a focus on semantic tasks such as similarity, clustering, and classification.

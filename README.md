@@ -2,14 +2,14 @@
 This project includes our research on "Modelling Reading Comprehension with Machine Learning and Psychometrics"
 ## Data Disc
 
--InternCode: An internal code for linking each item to additional information. In this project, this serves as an ID for each data point.
--Title: The title of the text.
--Text: The content of the text (in German).
--Item Discrimination: The item discrimination parameter, also known as the factor loading. This represents the correlation between a latent factor (the underlying trait being measured) and the response to this item.
--Item Difficulty: The item difficulty parameter. Positive values indicate a more difficult item, while negative values denote an easier one.
--Question: The question (in German) posed to the participants. (Please note that this file does not yet include all response options; I’ve requested an updated version, so please disregard this for now.)
--Correct Response: The correct response option(s).
--Item Type: This specifies whether the item is a single-choice question (one correct answer), a multiple-choice question (one or more correct answers), or an ordering task, where response options must be sequenced correctly. Responses are counted as correct only if all selected answers are accurate.
+- InternCode: An internal code for linking each item to additional information. In this project, this serves as an ID for each data point.
+- Title: The title of the text.
+- Text: The content of the text (in German).
+- Item Discrimination: The item discrimination parameter, also known as the factor loading. This represents the correlation between a latent factor (the underlying trait being measured) and the response to this item.
+- Item Difficulty: The item difficulty parameter. Positive values indicate a more difficult item, while negative values denote an easier one.
+- Question: The question (in German) posed to the participants. (Please note that this file does not yet include all response options; I’ve requested an updated version, so please disregard this for now.)
+- Correct Response: The correct response option(s).
+- Item Type: This specifies whether the item is a single-choice question (one correct answer), a multiple-choice question (one or more correct answers), or an ordering task, where response options must be sequenced correctly. Responses are counted as correct only if all selected answers are accurate.
 
 # Timeline
 - 13/11-20/11: Receiving data + Basic concepts literature review

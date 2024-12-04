@@ -44,13 +44,46 @@ This project includes our research on "Modelling Reading Comprehension with Mach
 
 # German Text Embedding Models
 
-Best performing 
+
+Best performing (MTEB) 
 - sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
 - xlm-r-distilroberta-base-paraphrase-v1
 - sentence-transformers/distiluse-base-multilingual-cased-v1
 *test them more thoroughly*
 
-This document provides a ranked list of open-source models for generating text embeddings for German text. The models are ranked from best to worst in terms of average performance, with a focus on semantic tasks such as similarity, clustering, and classification.
+pre-trained models that are well-suited for handling German text.
+
+### 1. **Multilingual BERT (mBERT)**
+Multilingual BERT is trained on 104 languages, including German. It can be used for a variety of NLP tasks and has good performance across multiple languages.
+
+- **Pros**: Supports multiple languages, widely used and tested.
+- **Cons**: May not be as fine-tuned for German as other dedicated models.
+
+### 2. **XLM-RoBERTa**
+XLM-RoBERTa is a transformer model trained on 100 languages, including German. It generally outperforms mBERT in many tasks due to its larger training dataset and improved architecture.
+
+- **Pros**: High performance on multilingual tasks, including German.
+- **Cons**: Requires more computational resources.
+
+### 3. **German BERT (bert-base-german-cased)**
+This is a BERT model specifically trained on German text. It may offer better performance on German-specific tasks compared to multilingual models.
+
+- **Pros**: Fine-tuned for the German language, good for German-specific tasks.
+- **Cons**: Limited to German language only.
+
+### 4. **GermEval Models**
+These models are specifically fine-tuned for German tasks and datasets, such as GermEval. They might provide more accurate embeddings for German texts.
+
+- **Pros**: Specifically tailored for German language and tasks.
+- **Cons**: Limited to German.
+
+### 5. **SBERT (Sentence-BERT)**
+SBERT is a modification of BERT that is fine-tuned to produce more semantically meaningful sentence embeddings. There are multilingual versions of SBERT, such as `xlm-r-distilroberta-base-paraphrase-v1`, which can be used for German.
+
+- **Pros**: Produces sentence embeddings directly, efficient for measuring distances between texts.
+- **Cons**: Requires more fine-tuning for specific tasks.
+
+A ranked list of open-source models for generating text embeddings for German text. The models are ranked from best to worst in terms of average performance, with a focus on semantic tasks such as similarity, clustering, and classification.
 
 ## Model Rankings
 
@@ -69,7 +102,7 @@ This document provides a ranked list of open-source models for generating text e
 | 9    | **cc.de.300.vec** (FastText)                       | FastText             | Word embeddings               | Lightweight, fast, but lacks contextuality, performs worse on complex German semantics.                |
 | 10   | **Word2Vec/Doc2Vec (Gensim)**                      | Gensim               | Word/Document embeddings      | Customizable but generally lower performance, lacks contextual information, requires large corpus.     |
 
-## Explanation of the Ranking
+## Explanation of the Ranking (made by GPT)
 
 - **Top Performers**: 
   - `paraphrase-multilingual-MiniLM-L12-v2` and `distiluse-base-multilingual-cased-v2` are optimized for generating sentence embeddings and perform consistently well across multiple languages, including German. They are efficient and handle complex language nuances effectively.

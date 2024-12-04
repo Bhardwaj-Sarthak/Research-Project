@@ -22,6 +22,67 @@ This project includes our research on "Modelling Reading Comprehension with Mach
 # Important Notes
 ## Jenny 
 
+# Literature Review 
+
+- * ML Models for Predicting, Understanding, and Influencing Health Perception* : The study employed DistilBERT and Word2Vec as the main machine learning models for predicting health perceptions. DistilBERT (a variant of BERT) provided 768-dimensional sentence embeddings to capture the semantic meaning of health-related text.
+Word2Vec was used for word-level embeddings, generating 300-dimensional representations by averaging component word vectors. Both models were evaluated using Ridge regression with leave-one-out cross-validation. Other models tested included Lasso, Support Vector Regression (SVR), and Random Forests, but DistilBERT and Word2Vec achieved the highest predictive accuracy.The combined use of embeddings with traditional metrics did not significantly outperform embeddings alone.
+
+- *Using ML to predict Item Difficulty and Response Time in Medical tests* : Textual Features: Stem length, sentence length, rare word count, medical term count, and Coh-Metrix indices (e.g., cohesion, readability).
+Contextual Features: Item type (text-only vs. text-and-picture), exam step, and challenging topics (specific medical keywords).
+Embeddings: MPNet embeddings representing contextual and syntactic structures of the text.
+The study employed 15 ML algorithms, grouped into three incremental models:
+Model 1: Used only textual and contextual features (no embeddings).
+Model 2: Added MPNet embeddings to Model 1 features.
+Model 3: Applied ensemble methods to combine top-performing algorithms.
+Algorithms Used:
+Linear Models: Linear Regression, Ridge, Lasso, ElasticNet.
+Tree-Based Models: Decision Tree, Random Forest, Gradient Boosting, Extra Trees, AdaBoost, CatBoost.
+Others: Stochastic Gradient Descent (SGD), Support Vector Regression (SVR), K-Neighbors, Multilayer Perceptron (MLP), XGBoost.
+Model Performance:
+Model 2 (with embeddings) slightly improved results compared to Model 1.
+Model 3 (ensemble) did not outperform Model 2 due to algorithmic similarity.
+Best individual models: AdaBoost (difficulty prediction).
+Feature Importance:
+Difficulty Prediction: Dominated by cohesion features (e.g., Coh-Metrix indices like PCTEMPz, LSASSpd).
+
+- *Automated estimation of item difficulty for multiple-choice tests: An application of word embedding techniques* :
+  Semantic Relationships:
+Stem-to-Answer Similarity (S-A): The semantic similarity between the question and the correct answer.
+Answer-to-Distractors Similarity (A-D): How similar the distractors are to the correct answer.
+Stem-to-Distractors Similarity (S-D): The similarity between the stem and each distractor.
+Semantic Features:
+Derived using cosine similarity between vector representations of item elements (stems, answers, distractors) in a semantic space.
+The system operates in three phases:
+Semantic Space Construction:
+Uses Word2Vec embeddings trained on a corpus of learning materials and past test data (e.g., Taiwanese social studies textbooks).
+Adopts the Skip-Gram model with Hierarchical Softmax (HS) for efficient representation of semantic spaces.
+Semantic Feature Extraction:
+Text elements (stems, answers, distractors) are mapped to vectors.
+Cosine similarity between vectors is calculated and standardized (z-scores) to obtain semantic features.
+Item Difficulty Estimation:
+A Support Vector Machine (SVM) classifier predicts difficulty based on semantic features.
+Difficulty levels are categorized (e.g., very easy to very difficult) using Rasch model item difficulty estimates as ground truth.
+Models and Tools
+Word2Vec: Used to generate word embeddings.
+SVM: Applied for item difficulty classification, extended to multi-class tasks with "one-against-one" methodology.
+
+- *Predicting Item Difficulty in a reading comprehension test with anartificial neural network * : Develop and evaluate an ANN approach for predicting item difficulty (proportion correct, p-value) in standardized reading comprehension tests and Compare the ANN’s performance with traditional methods such as multiple regression.
+ Model Architecture
+ANN Design:
+Input Layer: 24 units (one per feature).
+Hidden Layer: 17 units (optimized empirically).
+Output Layer: 1 unit (predicted item difficulty).
+Two variations: one with a sigmoid activation function in the output unit and one without it.
+Training and Testing:
+Data normalized to values between 0 and 1.
+Items split into training (15 items) and testing sets (14 items).
+Multiple runs with random initial weights to ensure consistency.
+
+- *Automatic Text Difficuty Estimation Using Embeddings and Neural Networks * : 
+
+
+
+
 --
 ## Sarthak
 - Explore Word2vec

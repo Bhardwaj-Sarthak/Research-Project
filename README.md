@@ -28,7 +28,26 @@ This project includes our research on "Modelling Reading Comprehension with Mach
 - Explore NLTK
 - Interesting Papers to read
   -- https://arxiv.org/pdf/2401.02709
+-The following categories are the most relevant:
+  --Semantic Textual Similarity (STS):
+    ---Most directly aligns with our goal of measuring semantic distance between text pairs.
+  
+  --Retrieval:
+    ---Useful for tasks like ranking multiple responses for a given question or retrieving the most relevant question for a paragraph.
+  
+  --Reranking:
+    ---multiple candidate responses to a question and want to rank them by relevance.
+  
+  --Pair Classification:
+    ---frame the task as a binary or multi-class classification problem (e.g., correct vs. incorrect response).
+
 # German Text Embedding Models
+
+Best performing 
+- sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+- xlm-r-distilroberta-base-paraphrase-v1
+- sentence-transformers/distiluse-base-multilingual-cased-v1
+*test them more thoroughly*
 
 This document provides a ranked list of open-source models for generating text embeddings for German text. The models are ranked from best to worst in terms of average performance, with a focus on semantic tasks such as similarity, clustering, and classification.
 
@@ -70,7 +89,5 @@ This document provides a ranked list of open-source models for generating text e
   - FastText (`cc.de.300.vec`) provides quick and simple embeddings but lacks contextual understanding, which is often crucial for German language tasks.
   - Gensim Word2Vec/Doc2Vec can be useful if you have a large German corpus and specific customization needs, but in general, these models underperform compared to more modern contextual embeddings.
 
-## Summary
 
-For most applications requiring high-quality embeddings in German, models like `paraphrase-multilingual-MiniLM-L12-v2` and `distiluse-base-multilingual-cased-v2` provide the best combination of performance and efficiency. German-specific models like `dbmdz/bert-base-german-cased` are also excellent for capturing the nuances of the German language.
 

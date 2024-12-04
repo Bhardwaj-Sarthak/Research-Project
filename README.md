@@ -125,16 +125,6 @@ Compared favorably to the state-of-the-art method by Xia et al., with slightly b
    -Syntax-level Feature Extraction: readability measures like Flesh Readig Ease and Flesh-Kincaid readability score. WordSmith software package. TF-IDF count occurances of certain words. Stanford NLP parser.
    -Sematic-level Feature Extraction: word embeddings with word2vec, ELMo, BERT. Cosine Similarity. Long short-term memory 
 
----
-
-### *Domains and Applications*
-- *Language Learning*: The most studied domain, using grammar, reading comprehension, and cloze tests.
-- *Other Fields*: Computer science and medicine also see significant use of difficulty prediction models, often for personalized learning and test calibration.
-
-The systematic review reveals that neural networks, particularly transformer models, are at the forefront of question difficulty prediction. These models' ability to integrate contextual and semantic features has led to higher accuracy and broader applicability. Let me know if you need detailed insights into specific techniques or findings!
-
-
-
 
 --
 ## Sarthak

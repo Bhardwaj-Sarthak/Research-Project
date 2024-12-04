@@ -151,6 +151,7 @@ Compared favorably to the state-of-the-art method by Xia et al., with slightly b
 
 
 Best performing (MTEB) 
+- T-Systems-onsite/cross-en-de-roberta-sentence-transformer
 - sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
 - xlm-r-distilroberta-base-paraphrase-v1
 - sentence-transformers/distiluse-base-multilingual-cased-v1

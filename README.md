@@ -78,7 +78,60 @@ Data normalized to values between 0 and 1.
 Items split into training (15 items) and testing sets (14 items).
 Multiple runs with random initial weights to ensure consistency.
 
-- *Automatic Text Difficuty Estimation Using Embeddings and Neural Networks* : 
+- *Automatic Text Difficuty Estimation Using Embeddings and Neural Networks* :Models and Techniques Used
+Embedding Models:
+Word2Vec: Context-independent embeddings (300 dimensions).
+GloVe: Similar to Word2Vec, offering simplicity and computational efficiency.
+ELMo (Deep Contextualized Word Embeddings):
+Sentence embeddings: Mean-pooled representations (1024 dimensions).
+Word embeddings: Contextualized representations, trained character-level for handling out-of-vocabulary words.
+BERT:
+Small BERT (768 dimensions).
+Large BERT (1024 dimensions).
+Used mean pooling of the final hidden layer.
+Neural Network Architectures:
+Convolutional Neural Networks (CNNs): Used for dimensionality reduction.
+Bidirectional LSTMs (BiLSTMs): Found to be more effective for capturing sequential data compared to CNNs.
+Experiment Findings
+Best Models:
+BiLSTM with ELMo sentence embeddings and appended normalized sentence lengths achieved the best generalization to unseen data.
+Models using ELMo word embeddings and BERT embeddings did not perform as well, likely due to hardware constraints.
+GloVe embeddings outperformed Word2Vec in experiments.
+Performance:
+An ensemble of the best-performing models achieved the highest accuracy (81.3%) and macro F1 score (80.6%) on the development set.
+Compared favorably to the state-of-the-art method by Xia et al., with slightly better accuracy and Pearson correlation coefficients.
+
+- *Text-Based Question Difficulty Prediction: A Systematic Review of Automatic Approaches* : *Key Models and Techniques*
+1. *Machine Learning (ML) Models*:
+   - *Supervised Learning*: Predominantly used, with difficulty prediction treated as a classification or regression task.
+   - *Support Vector Machines (SVM)*: Trained with syntactic and semantic features, often outperforming simpler models.
+   - *Random Forest (RF)*: Frequently used due to consistent performance in various algorithm selection experiments.
+
+2. *Neural Network Models*:
+   - *Convolutional Neural Networks (CNNs)*: Extract sentence representations for prediction tasks, often applied to reading comprehension questions.
+   - *Long Short-Term Memory (LSTM)* and *Bidirectional LSTM (BiLSTM)*:
+     - Employed for encoding textual semantics, often as part of end-to-end frameworks.
+     - Effective but less efficient compared to transformer-based models due to sequential computation.
+   - *Transformer Models (e.g., BERT, DistilBERT)*:
+     - Utilized for contextualized word embeddings.
+     - Advanced techniques like Multi-Task BERT (MTBERT) enhance accuracy by leveraging domain-specific pretraining.
+3. *Embedding Techniques*:
+   - *Word2Vec*: Widely used for semantic vector representations of text components.
+   - *TF-IDF*: Combined with regression or SVM to evaluate term importance in text.
+   - *ELMo*: Pre-trained contextual embeddings, often paired with BiLSTM for enhanced semantic understanding.
+   - *BERT*: Applied for semantic similarity and question difficulty prediction, outperforming traditional embeddings in many cases.
+  
+4. *Features* : (use automatic feature extractions like autoencoders, pca, bag of words, TF-IDF)
+   -Syntax-level Feature Extraction: readability measures like Flesh Readig Ease and Flesh-Kincaid readability score. WordSmith software package. TF-IDF count occurances of certain words. Stanford NLP parser.
+   -Sematic-level Feature Extraction: word embeddings with word2vec, ELMo, BERT. Cosine Similarity. Long short-term memory 
+
+---
+
+### *Domains and Applications*
+- *Language Learning*: The most studied domain, using grammar, reading comprehension, and cloze tests.
+- *Other Fields*: Computer science and medicine also see significant use of difficulty prediction models, often for personalized learning and test calibration.
+
+The systematic review reveals that neural networks, particularly transformer models, are at the forefront of question difficulty prediction. These models' ability to integrate contextual and semantic features has led to higher accuracy and broader applicability. Let me know if you need detailed insights into specific techniques or findings!
 
 
 

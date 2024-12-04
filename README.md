@@ -29,6 +29,7 @@ This project includes our research on "Modelling Reading Comprehension with Mach
 - Interesting Papers to read
   -- https://arxiv.org/pdf/2401.02709
 -The following categories are the most relevant:
+
   --Semantic Textual Similarity (STS):
     ---Most directly aligns with our goal of measuring semantic distance between text pairs.
   

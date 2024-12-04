@@ -24,7 +24,7 @@ This project includes our research on "Modelling Reading Comprehension with Mach
 
 # Literature Review 
 
-- * ML Models for Predicting, Understanding, and Influencing Health Perception* : The study employed DistilBERT and Word2Vec as the main machine learning models for predicting health perceptions. DistilBERT (a variant of BERT) provided 768-dimensional sentence embeddings to capture the semantic meaning of health-related text.
+- *ML Models for Predicting, Understanding, and Influencing Health Perception* : The study employed DistilBERT and Word2Vec as the main machine learning models for predicting health perceptions. DistilBERT (a variant of BERT) provided 768-dimensional sentence embeddings to capture the semantic meaning of health-related text.
 Word2Vec was used for word-level embeddings, generating 300-dimensional representations by averaging component word vectors. Both models were evaluated using Ridge regression with leave-one-out cross-validation. Other models tested included Lasso, Support Vector Regression (SVR), and Random Forests, but DistilBERT and Word2Vec achieved the highest predictive accuracy.The combined use of embeddings with traditional metrics did not significantly outperform embeddings alone.
 
 - *Using ML to predict Item Difficulty and Response Time in Medical tests* : Textual Features: Stem length, sentence length, rare word count, medical term count, and Coh-Metrix indices (e.g., cohesion, readability).
@@ -66,7 +66,7 @@ Models and Tools
 Word2Vec: Used to generate word embeddings.
 SVM: Applied for item difficulty classification, extended to multi-class tasks with "one-against-one" methodology.
 
-- *Predicting Item Difficulty in a reading comprehension test with anartificial neural network * : Develop and evaluate an ANN approach for predicting item difficulty (proportion correct, p-value) in standardized reading comprehension tests and Compare the ANN’s performance with traditional methods such as multiple regression.
+- *Predicting Item Difficulty in a reading comprehension test with anartificial neural network* : Develop and evaluate an ANN approach for predicting item difficulty (proportion correct, p-value) in standardized reading comprehension tests and Compare the ANN’s performance with traditional methods such as multiple regression.
  Model Architecture
 ANN Design:
 Input Layer: 24 units (one per feature).
@@ -78,7 +78,7 @@ Data normalized to values between 0 and 1.
 Items split into training (15 items) and testing sets (14 items).
 Multiple runs with random initial weights to ensure consistency.
 
-- *Automatic Text Difficuty Estimation Using Embeddings and Neural Networks * : 
+- *Automatic Text Difficuty Estimation Using Embeddings and Neural Networks* : 
 
 
 

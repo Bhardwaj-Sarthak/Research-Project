@@ -14,7 +14,7 @@ df.fillna("N/A", inplace=True)
 df.head(5)
 #%%
 single_df=df[df["Item Type"]=="single choice"]
-multi_df=df[df["Item Type"]=="multiple choice"]
+multi_df=df[df["Item Type"]=="multiple response"]
 other_df=df[df["Item Type"]=="order"]
 
 
@@ -23,12 +23,12 @@ other_df=df[df["Item Type"]=="order"]
 ###################  Nicely Working  ##############################
 ###################################################################
 # model names
-# sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2 ~ done for single
+# sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2 ~ done for single & multi
 # xlm-r-distilroberta-base-paraphrase-v1 ~ done for single
 # sentence-transformers/distiluse-base-multilingual-cased-v1 ~ done for single
 # T-Systems-onsite/cross-en-de-roberta-sentence-transformer ~ done for single
 
-model_name= 'T-Systems-onsite/cross-en-de-roberta-sentence-transformer'
+model_name= 'sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2'
 model = SentenceTransformer(model_name)
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
@@ -248,6 +248,193 @@ plt.hist(similarity_difference,bins=50)
 ###############################################################
 ###############################################################
 ###############################################################
+#%% Multi choice pre processing 
+multi_df.reset_index(drop=True, inplace=True)
+multi_df[['correct response 1','correct response 2','correct response 3' ]] = multi_df['Correct Response'].str.split(';',expand=True,n=2)
+multi_df['correct response 1'] = multi_df['correct response 1'].str.strip()
+multi_df['correct response 2'] = multi_df['correct response 2'].str.strip()
+multi_df['correct response 3'] = multi_df['correct response 3'].str.strip()
+multi_df.fillna('N/A',inplace=True)
+#%%
+# model names
+# sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2 ~ done for single & multi
+# xlm-r-distilroberta-base-paraphrase-v1 ~ done for single & multi
+# sentence-transformers/distiluse-base-multilingual-cased-v1 ~ done for single & multi
+# T-Systems-onsite/cross-en-de-roberta-sentence-transformer ~ done for single & multi
+
+model_name= 'T-Systems-onsite/cross-en-de-roberta-sentence-transformer'
+model = SentenceTransformer(model_name)
+
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+model= model.to(device)
+single_df.reset_index(drop=True, inplace=True)
+#embeddings
+para_embd=[]
+corr_embd=[]
+corr_embd_1=[]
+corr_embd_2=[]
+corr_embd_3=[]
+quest_embd=[]
+response_1_embd=[]
+response_2_embd=[]
+response_3_embd=[]
+response_4_embd=[]
+response_5_embd=[]
+response_6_embd=[]
+response_7_embd=[]
+#similarity scores
+para_question=[]
+question_response_correct=[]
+question_response_correct_1=[]
+question_response_correct_2=[]
+question_response_correct_3=[]
+para_response_correct=[]
+para_response_correct_1=[]
+para_response_correct_2=[]
+para_response_correct_3=[]
+para_response_1=[]
+para_response_2=[]
+para_response_3=[]
+para_response_4=[]
+para_response_5=[]
+para_response_6=[]
+para_response_7=[]
+quest_response_1=[]
+quest_response_2=[]
+quest_response_3=[]
+quest_response_4=[]
+quest_response_5=[]
+quest_response_6=[]
+quest_response_7=[]
+
+for i in range(len(multi_df)):
+    paragraph_embedding = model.encode(multi_df['Content'][i])
+    response_correct_embedding = model.encode(multi_df['Correct Response'][i])
+    response_correct_embedding_1 = model.encode(multi_df['correct response 1'][i])
+    response_correct_embedding_2 = model.encode(multi_df['correct response 2'][i])
+    response_correct_embedding_3 = model.encode(multi_df['correct response 3'][i])
+    question_embedding = model.encode(multi_df['Question'][i])
+    response_1_embedding = model.encode(multi_df['Response Option 1'][i])
+    response_2_embedding = model.encode(multi_df['Response Option 2'][i])
+    response_3_embedding = model.encode(multi_df['Response Option 3'][i])
+    response_4_embedding = model.encode(multi_df['Response Option 4'][i])
+    response_5_embedding = model.encode(multi_df['Response Option 5'][i])
+    response_6_embedding = model.encode(multi_df['Response Option 6'][i])
+    response_7_embedding = model.encode(multi_df['Response Option 7'][i])
+    
+    para_question_sim = util.cos_sim(paragraph_embedding, question_embedding)
+    para_response_correct_sim = util.cos_sim(paragraph_embedding, response_correct_embedding)
+    para_response_correct_1_sim = util.cos_sim(paragraph_embedding, response_correct_embedding_1)
+    para_response_correct_2_sim = util.cos_sim(paragraph_embedding, response_correct_embedding_2)
+    para_response_correct_3_sim = util.cos_sim(paragraph_embedding, response_correct_embedding_3)
+    question_response_correct_sim = util.cos_sim(question_embedding, response_correct_embedding)
+    question_response_correct_1_sim = util.cos_sim(question_embedding, response_correct_embedding_1)
+    question_response_correct_2_sim = util.cos_sim(question_embedding, response_correct_embedding_2)
+    question_response_correct_3_sim = util.cos_sim(question_embedding, response_correct_embedding_3)
+    
+    correct_response_1_2_sim = util.cos_sim(response_correct_embedding_1, response_correct_embedding_2)
+    correct_response_1_3_sim = util.cos_sim(response_correct_embedding_1, response_correct_embedding_3)
+    correct_response_2_3_sim = util.cos_sim(response_correct_embedding_2, response_correct_embedding_3)
+    
+    question_response_1_sim = util.cos_sim(question_embedding, response_1_embedding)
+    question_response_2_sim = util.cos_sim(question_embedding, response_2_embedding)
+    question_response_3_sim = util.cos_sim(question_embedding, response_3_embedding)
+    question_response_4_sim = util.cos_sim(question_embedding, response_4_embedding)
+    question_response_5_sim = util.cos_sim(question_embedding, response_5_embedding)
+    question_response_6_sim = util.cos_sim(question_embedding, response_6_embedding)
+    question_response_7_sim = util.cos_sim(question_embedding, response_7_embedding)
+    
+    para_response_1_sim = util.cos_sim(paragraph_embedding, response_1_embedding)
+    para_response_2_sim = util.cos_sim(paragraph_embedding, response_2_embedding)
+    para_response_3_sim = util.cos_sim(paragraph_embedding, response_3_embedding)
+    para_response_4_sim = util.cos_sim(paragraph_embedding, response_4_embedding)
+    para_response_5_sim = util.cos_sim(paragraph_embedding, response_5_embedding)
+    para_response_6_sim = util.cos_sim(paragraph_embedding, response_6_embedding)
+    para_response_7_sim = util.cos_sim(paragraph_embedding, response_7_embedding)
+    
+    para_embd.append(paragraph_embedding)
+    corr_embd.append(response_correct_embedding)
+    corr_embd_1.append(response_correct_embedding_1)
+    corr_embd_2.append(response_correct_embedding_2)
+    corr_embd_3.append(response_correct_embedding_3)
+    quest_embd.append(question_embedding)
+    response_1_embd.append(response_1_embedding)
+    response_2_embd.append(response_2_embedding)
+    response_3_embd.append(response_3_embedding)
+    response_4_embd.append(response_4_embedding)
+    response_5_embd.append(response_5_embedding)
+    response_6_embd.append(response_6_embedding)
+    response_7_embd.append(response_7_embedding)
+    
+    para_question.append(para_question_sim)
+    question_response_correct.append(question_response_correct_sim)
+    question_response_correct_1.append(question_response_correct_1_sim)
+    question_response_correct_2.append(question_response_correct_2_sim)
+    question_response_correct_3.append(question_response_correct_3_sim)
+    para_response_correct.append(para_response_correct_sim)
+    para_response_correct_1.append(para_response_correct_1_sim)
+    para_response_correct_2.append(para_response_correct_2_sim)
+    para_response_correct_3.append(para_response_correct_3_sim)
+    
+    para_response_1.append(para_response_1_sim)
+    para_response_2.append(para_response_2_sim)
+    para_response_3.append(para_response_3_sim)
+    para_response_4.append(para_response_4_sim)
+    para_response_5.append(para_response_5_sim)
+    para_response_6.append(para_response_6_sim)
+    para_response_7.append(para_response_7_sim)
+    
+    quest_response_1.append(question_response_1_sim)
+    quest_response_2.append(question_response_2_sim)
+    quest_response_3.append(question_response_3_sim)
+    quest_response_4.append(question_response_4_sim)
+    quest_response_5.append(question_response_5_sim)
+    quest_response_6.append(question_response_6_sim)
+    quest_response_7.append(question_response_7_sim)
+
+print("done")
+#%% make a df and export to csv
+
+multi_df['Para Embedding'] = para_embd
+multi_df['Correct Response Embedding'] = corr_embd
+multi_df['Correct Response 1 Embedding'] =corr_embd_1
+multi_df['Correct Response 2 Embedding'] =corr_embd_2
+multi_df['Correct Response 3 Embedding'] =corr_embd_3
+multi_df['Question Embedding'] = quest_embd
+multi_df['Response Option 1 Embedding'] = response_1_embd
+multi_df['Response Option 2 Embedding'] = response_2_embd
+multi_df['Response Option 3 Embedding'] = response_3_embd
+multi_df['Response Option 4 Embedding'] = response_4_embd
+multi_df['Response Option 5 Embedding'] = response_5_embd
+multi_df['Response Option 6 Embedding'] = response_6_embd
+multi_df['Response Option 7 Embedding'] = response_7_embd
+multi_df['Para-Question Similarity'] = para_question
+multi_df['Question-Correct Response Similarity'] = question_response_correct
+multi_df['Question-Correct Response 1 Similarity'] =question_response_correct_1
+multi_df['Question-Correct Response 2 Similarity'] =question_response_correct_2
+multi_df['Question-Correct Response 3 Similarity'] =question_response_correct_3
+multi_df['Para-Correct Response Similarity'] = para_response_correct
+multi_df['Para-Correct Response 1 Similarity'] =para_response_correct_1
+multi_df['Para-Correct Response 2 Similarity'] =para_response_correct_2
+multi_df['Para-Correct Response 3 Similarity'] =para_response_correct_3
+multi_df['Para-Response Option 1 Similarity'] = para_response_1
+multi_df['Para-Response Option 2 Similarity'] = para_response_2
+multi_df['Para-Response Option 3 Similarity'] = para_response_3
+multi_df['Para-Response Option 4 Similarity'] = para_response_4
+multi_df['Para-Response Option 5 Similarity'] = para_response_5
+multi_df['Para-Response Option 6 Similarity'] = para_response_6
+multi_df['Para-Response Option 7 Similarity'] = para_response_7
+multi_df['Question-Response Option 1 Similarity'] = quest_response_1
+multi_df['Question-Response Option 2 Similarity'] = quest_response_2
+multi_df['Question-Response Option 3 Similarity'] = quest_response_3
+multi_df['Question-Response Option 4 Similarity'] = quest_response_4
+multi_df['Question-Response Option 5 Similarity'] = quest_response_5
+multi_df['Question-Response Option 6 Similarity'] = quest_response_6
+multi_df['Question-Response Option 7 Similarity'] = quest_response_7
+model_name_safe = model_name.replace('/', '_')
+multi_df.to_csv(f'{model_name_safe}_multi_df.csv', index=False)
+
+
 #%%
 plt.scatter(y=(single_df['Item Discrimination']
                ),x=single_df['Title'],c=single_df['Content'].astype('category').cat.codes,cmap='viridis'

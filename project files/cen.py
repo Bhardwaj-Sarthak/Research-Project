@@ -8,7 +8,9 @@ import torch.optim as optim
 import pandas as pd
 from sklearn.model_selection import ParameterGrid
 
-
+# show progress bar
+from tqdm import tqdm
+tqdm.pandas()
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu') 
 def train_cen(X1, X2, X3, X4, X5, X6, X7, Y):
     X1_train, X1_test, X2_train, X2_test, X3_train, X3_test, X4_train, X4_test, X5_train, X5_test, X6_train, X6_test, X7_train, X7_test, Y_train, Y_test = train_test_split(X1, X2, X3, X4, X5, X6, X7, Y, test_size=0.2, random_state=42)
@@ -94,14 +96,19 @@ def train_cen(X1, X2, X3, X4, X5, X6, X7, Y):
     grid = ParameterGrid(param_grid)
     best_loss = float('inf')
     criterion = nn.MSELoss()
+    total_combinations = len(param_grid['hidden_dim']) * len(param_grid['num_epochs']) * len(param_grid['learning_rate'])
 
+    pbar = tqdm(grid, total=total_combinations, desc="Grid Search")
     best_params = None
-    for params in grid:
-        
-        model_cen = CrossEstimationNetwork(embedding_dim=X1.shape[1], hidden_dim=params['hidden_dim'],output_dim=2).to(device)
+    for params in pbar:
+        # Update description with current parameters
+        pbar.set_description(f"Search: hidden_dim={params['hidden_dim']}, epochs={params['num_epochs']}, lr={params['learning_rate']:.4f}")
+        model_cen = CrossEstimationNetwork(embedding_dim=X1.shape[1], hidden_dim=params['hidden_dim'], output_dim=2).to(device)
         optimizer = optim.Adam(model_cen.parameters(), lr=params['learning_rate'])
         model_cen.to(device)
         model_cen.train()
+        
+        # Train the model
         for epoch in range(params['num_epochs']):
             optimizer.zero_grad()
             outputs = model_cen(X1_train, X2_train, X3_train, X4_train, X5_train, X6_train, X7_train)
@@ -110,15 +117,17 @@ def train_cen(X1, X2, X3, X4, X5, X6, X7, Y):
             optimizer.step()
         
         model_cen.eval()
-        outputs = model_cen(X2_test, X1_test, X3_test, X4_test, X5_test, X6_test, X7_test)
+        outputs = model_cen(X1_test, X2_test, X3_test, X4_test, X5_test, X6_test, X7_test)
         test_loss = criterion(outputs, Y_test)
+        
+        # Update postfix with current test loss
+        pbar.set_postfix(test_loss=f"{test_loss.item():.4f}")
         
         if test_loss < best_loss:
             best_loss = test_loss
             best_params = params
-            print(f'Best Test Loss: {best_loss} | Best Parameters: {best_params} | Best model accuracy: {1 - best_loss.item()}')        
-            print(f'_________________________________________________________')
-            
+            print(f'\n New best Loss: {best_loss:.4f} | Accuracy: {1 - best_loss.item():.4f}\n Params: {best_params} \n')     
+            #print(f'_ _'*10)
             
     print(f'Best Test Loss: {best_loss}')
     print(f'Best Parameters: {best_params}')

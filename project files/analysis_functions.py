@@ -14,8 +14,8 @@ from sklearn.linear_model import lasso_path
 from sklearn.linear_model import ElasticNetCV
 
 def print_lasso(comb_data, y):
-    for emb in comb_data:
-        X=emb
+    for dat in comb_data:
+        X= dat
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
         
         scaler = StandardScaler()
@@ -32,15 +32,15 @@ def print_lasso(comb_data, y):
         print(f"R^2 score: {lasso_cv_uns.score(X_test, y_test)}")
         print(f"_ _ "*10)
         alphas_lasso, coefs_lasso, _ = lasso_path(X_train, y_train, alphas=alphas)
-        plt.figure(figsize=(10, 10))
-        for i in range(coefs_lasso.shape[0]):
-            plt.plot(alphas_lasso, coefs_lasso[i], label=f"Feature {i+1}")
-        plt.axvline(opt_alpha_lasso, color="black", linestyle="--", label="Optimal Alpha")
-        plt.xlabel("Alpha")
-        plt.ylabel("Coefficient")
-        plt.title("Lasso Path")
-        plt.legend()
-        plt.show()
+        #plt.figure(figsize=(10, 10))
+        #for i in range(coefs_lasso.shape[0]):
+        #    plt.plot(alphas_lasso, coefs_lasso[i], label=f"Feature {i+1}")
+        #plt.axvline(opt_alpha_lasso, color="black", linestyle="--", label="Optimal Alpha")
+        #plt.xlabel("Alpha")
+        #plt.ylabel("Coefficient")
+        #plt.title("Lasso Path")
+        ##plt.legend()
+        #plt.show()
         lasso_cv_uns = LassoCV(alphas=alphas, cv=15)
         lasso_cv_uns.fit(X_train_scaled, y_train)
         opt_alpha_lasso1 = lasso_cv_uns.alpha_
@@ -49,22 +49,23 @@ def print_lasso(comb_data, y):
         print(f"Number of features used: {np.sum(lasso_cv_uns.coef_ != 0)}")
         print(f"Mean Squared Error: {mean_squared_error(y_test, lasso_cv_uns.predict(X_test_scaled))}")
         print(f"R^2 score: {lasso_cv_uns.score(X_test_scaled, y_test)}")
-        print(f"_________________________________________________________")
-        print(f"_________________________________________________________")
+        print(f"_ _ "*10)
+        print(f" _ _"*10)
         alphas_lasso, coefs_lasso, _ = lasso_path(X_train, y_train, alphas=alphas)
-        plt.figure(figsize=(10, 10))
-        for i in range(coefs_lasso.shape[0]):
-            plt.plot(alphas_lasso, coefs_lasso[i], label=f"Feature {i+1}")
-        plt.axvline(opt_alpha_lasso1, color="black", linestyle="--", label="Optimal Alpha")
-        plt.xlabel("Alpha")
-        plt.ylabel("Coefficient")
-        plt.title("Lasso Path")
-        plt.legend()
-        plt.show()
+        #plt.figure(figsize=(10, 10))
+        #for i in range(coefs_lasso.shape[0]):
+        #    plt.plot(alphas_lasso, coefs_lasso[i], label=f"Feature {i+1}")
+        #plt.axvline(opt_alpha_lasso1, color="black", linestyle="--", label="Optimal Alpha")
+        #plt.xlabel("Alpha")
+        #plt.ylabel("Coefficient")
+        #plt.title("Lasso Path")
+        ##plt.legend()
+        #plt.show()
+    print(f"_________________________________________________________")
         
 def print_elastic_net(comb_data, y):
-    for emb in (comb_data):
-        X=emb     
+    for dat in (comb_data):
+        X=dat     
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
         scaler = StandardScaler()
         X_train_scaled = scaler.fit_transform(X_train)
@@ -89,6 +90,52 @@ def print_elastic_net(comb_data, y):
         print(f"Mean Squared Error: {mean_squared_error(y_test, elastic_net_cv.predict(X_test_scaled))}")
         # also print r^2 value
         print(f'R^2 value: {elastic_net_cv.score(X_test, y_test)}')
-        print(f"_________________________________________________________")
-        print(f"_________________________________________________________")
+        print(f"_ _ "*10)
+        print(f" _ _"*10)
+    print(f"_________________________________________________________")
+        
+def pritn_lasso_text(df_text,y):
+    x=df_text.drop(['Item Difficulty',
+                    'Item Discrimination',
+                    'Item Type',
+                    'InternCode',
+                    'Title',
+                    'Content',
+                    'Question',
+                    'Correct Response',
+                    'Response Option 1',
+                    'Response Option 2',
+                    'Response Option 3',
+                    'Response Option 4',
+                    'Response Option 5',
+                    'Response Option 6',
+                    'Response Option 7',
+                    'Item Type'],axis=1)
+    x.replace('Missing',0,inplace=True)
+    X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+    scaler = StandardScaler()
+    X_train_scaled = scaler.fit_transform(X_train)
+    X_test_scaled = scaler.transform(X_test)
+
+    alphas = np.arange(0.1, 10, 0.1)
+    lasso_cv_uns = LassoCV(alphas=alphas, cv=15)
+    lasso_cv_uns.fit(X_train, y_train)
+    opt_alpha_lasso = lasso_cv_uns.alpha_
+    print(f"for unscaled data: \n ")
+    print(f"Optimal alpha: {lasso_cv_uns.alpha_}")
+    print(f"Number of features used: {np.sum(lasso_cv_uns.coef_ != 0)}")
+    print(f"Mean Squared Error: {mean_squared_error(y_test, lasso_cv_uns.predict(X_test))}")
+    print(f"R^2 score: {lasso_cv_uns.score(X_test, y_test)}")
+    print(f"_ _ "*10)
+
+    lasso_cv_uns = LassoCV(alphas=alphas, cv=15)
+    lasso_cv_uns.fit(X_train_scaled, y_train)
+    opt_alpha_lasso = lasso_cv_uns.alpha_
+    print(f"for scaled data: \n ")
+    print(f"Optimal alpha: {lasso_cv_uns.alpha_}")
+    print(f"Number of features used: {np.sum(lasso_cv_uns.coef_ != 0)}")
+    print(f"Mean Squared Error: {mean_squared_error(y_test, lasso_cv_uns.predict(X_test_scaled))}")
+    print(f"R^2 score: {lasso_cv_uns.score(X_test_scaled, y_test)}")
+    print(f"_________________________________________________________")
+
         

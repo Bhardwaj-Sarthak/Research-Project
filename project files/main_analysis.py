@@ -129,6 +129,15 @@ print('Results of Lasso for text embeddings:')
 print_lasso(emb_comb, y)
 print('Results of elastic net for text embeddings:')
 print_elastic_net(emb_comb, y)
+print('Results of random forest for text embeddings:')
+print_random_forest(emb_comb, y)
+print('Results of support vector regression for text embeddings:')
+print_SVR(emb_comb, y)
+print('Results of support vector machine for text embeddings:')
+print_SVM(emb_comb, y)
+print('Results of random forest for classification for text embeddings:')
+print_Random_Forest_Classification(emb_comb, y)
+
 
 
 # stop here if response is multiple response

@@ -1,5 +1,7 @@
 # Research-Project
 This project includes our research on "Modelling Reading Comprehension with Machine Learning and Psychometrics"
+
+THE FINAL CODE FOR RUNNING ALL THE ALGORITHMS USED IN THE STUDY IS UNDER PROJECT FILES, PLEASE NAVIGATE TO THE FOLDER AND RUN MAIN_ANALYSIS FILE.
 ## Data Disc
 
 - *InternCode*: An internal code for linking each item to additional information. In this project, this serves as an ID for each data point.

@@ -1,12 +1,11 @@
-# change the path to the directory where the project files are stored
 # add the data file to the project files directory
-# add the name in line 35 of the code
-# select the response type
+# add the name in line 36 of the code
+# select the response type in line 35 of the code
 # rest you are good to go
 
 #%%
 import sys
-sys.path.append(r"C:\Users\Sarthak\Downloads\research project\project files")
+sys.path.append(r".")
 from analysis_functions import *
 import embeddings_gen as emb
 from cen import *
@@ -129,22 +128,21 @@ print('Results of Lasso for text embeddings:')
 print_lasso(emb_comb, y)
 print('Results of elastic net for text embeddings:')
 print_elastic_net(emb_comb, y)
-print('Results of random forest for text embeddings:')
-print_random_forest(emb_comb, y)
 print('Results of support vector regression for text embeddings:')
 print_SVR(emb_comb, y)
 print('Results of support vector machine for text embeddings:')
 print_SVM(emb_comb, y)
+# run time for random forests is very long 2hrs + for each for all embeddings combined
+print('Results of random forest for text embeddings:')
+print_random_forest(emb_comb, y)
 print('Results of random forest for classification for text embeddings:')
 print_Random_Forest_Classification(emb_comb, y)
-
-
 
 # stop here if response is multiple response
 if response == 'multiple response':
     print('Response type is multiple response. CEN is not applicable due to less number of data points')
     sys.exit()
-
+#%%
 Y = torch.tensor(df_t[['Item Difficulty', 'Item Discrimination']].values, dtype=torch.float32)
 print('Results of CEN for text embeddings:')
 X1 = torch.tensor(final_embeddings_1[:, :768]).float()  #content

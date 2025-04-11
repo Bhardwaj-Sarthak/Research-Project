@@ -13,6 +13,8 @@ from tqdm import tqdm
 tqdm.pandas()
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu') 
 def train_cen(X1, X2, X3, X4, X5, X6, X7, Y):
+    #send the split outside the function so that the models are compared on the same data
+    #add embedding generator here used on the training and test data
     X1_train, X1_test, X2_train, X2_test, X3_train, X3_test, X4_train, X4_test, X5_train, X5_test, X6_train, X6_test, X7_train, X7_test, Y_train, Y_test = train_test_split(X1, X2, X3, X4, X5, X6, X7, Y, test_size=0.2, random_state=42)
     X1_train = torch.tensor(X1_train, dtype=torch.float32).to(device)
     X2_train = torch.tensor(X2_train, dtype=torch.float32).to(device)
@@ -65,16 +67,16 @@ def train_cen(X1, X2, X3, X4, X5, X6, X7, Y):
             return f1_enhanced, f2_enhanced, f3_enhanced, f4_enhanced, f5_enhanced, f6_enhanced, f7_enhanced
 
     class CrossEstimationNetwork(nn.Module):
-        def __init__(self, embedding_dim, hidden_dim, output_dim):
+        def __init__(self, embedding_dim, hidden_dim,hidden_dim1, output_dim):
             super(CrossEstimationNetwork, self).__init__()
             self.cross_attention = CrossAttention(embedding_dim)
             self.fc = nn.Sequential(
-                nn.Linear(7 * embedding_dim, 2*embedding_dim),   
+                nn.Linear(7 * embedding_dim, hidden_dim1),   
                 nn.ReLU(),
                 nn.Dropout(0.4),
-                nn.Linear(2*embedding_dim, embedding_dim // 2),
+                nn.Linear(hidden_dim1, hidden_dim1 // 2),
                 nn.ReLU(),
-                nn.Linear(embedding_dim // 2, hidden_dim ),
+                nn.Linear(hidden_dim1 // 2, hidden_dim ),
                 nn.Dropout(0.3),
                 nn.ReLU(),
                 nn.Linear(hidden_dim, output_dim)  
@@ -86,9 +88,10 @@ def train_cen(X1, X2, X3, X4, X5, X6, X7, Y):
             output = self.fc(fused_features)
             return output
 
-
+    embedding_dim=X1.shape[1]
     param_grid = {
-        'hidden_dim': [64,128,256, 512, 768, 1024],
+        'hidden_dim1': [2*embedding_dim, 3*embedding_dim, 4*embedding_dim],#, 512, 768, 1024],
+        'hidden_dim': [64,128,256],#, 512, 768, 1024],
         'num_epochs': np.arange(0, 20, 1),
         'learning_rate': np.arange(0.001, 0.05, 0.001)
     }
@@ -96,14 +99,14 @@ def train_cen(X1, X2, X3, X4, X5, X6, X7, Y):
     grid = ParameterGrid(param_grid)
     best_loss = float('inf')
     criterion = nn.MSELoss()
-    total_combinations = len(param_grid['hidden_dim']) * len(param_grid['num_epochs']) * len(param_grid['learning_rate'])
+    total_combinations = len(param_grid['hidden_dim1'])*len(param_grid['hidden_dim']) * len(param_grid['num_epochs']) * len(param_grid['learning_rate'])
 
     pbar = tqdm(grid, total=total_combinations, desc="Grid Search")
     best_params = None
     for params in pbar:
         # Update description with current parameters
-        pbar.set_description(f"Search: hidden_dim={params['hidden_dim']}, epochs={params['num_epochs']}, lr={params['learning_rate']:.4f}")
-        model_cen = CrossEstimationNetwork(embedding_dim=X1.shape[1], hidden_dim=params['hidden_dim'], output_dim=2).to(device)
+        pbar.set_description(f"Search: hidden_dim={params['hidden_dim'],params['hidden_dim1']}, epochs={params['num_epochs']}, lr={params['learning_rate']:.4f}")
+        model_cen = CrossEstimationNetwork(embedding_dim=X1.shape[1], hidden_dim1= params['hidden_dim1'],hidden_dim=params['hidden_dim'], output_dim=2).to(device)
         optimizer = optim.Adam(model_cen.parameters(), lr=params['learning_rate'])
         model_cen.to(device)
         model_cen.train()
@@ -140,27 +143,27 @@ def train_cen(X1, X2, X3, X4, X5, X6, X7, Y):
         loss = criterion(Y_pred, Y_test)
     Y_pred_c = Y_pred.cpu().numpy()
     Y_test_c = Y_test.cpu().numpy()
-    df_results = pd.DataFrame({'Predicted Discrimination': Y_pred_c[:, 0], 'Actual Discrimination': Y_test_c[:, 0],'Difference Discrimination': Y_pred_c[:, 0]-Y_test_c[:, 0],
-                            'Predicted Difficulty': Y_pred_c[:, 1], 'Actual Difficulty': Y_test_c[:, 1],'Difference Difficulty': Y_pred_c[:, 1]-Y_test_c[:, 1]})
-    diff_disc = np.abs(df_results['Difference Discrimination']).mean()
+    df_results = pd.DataFrame({'Predicted Difficulty': Y_pred_c[:, 0], 'Actual Difficulty': Y_test_c[:, 0],'Difference Discrimination': Y_pred_c[:, 0]-Y_test_c[:, 0],
+                            'Predicted Discrimination': Y_pred_c[:, 1], 'Actual Discrimination': Y_test_c[:, 1],'Difference Difficulty': Y_pred_c[:, 1]-Y_test_c[:, 1]})
     diff_diff = np.abs(df_results['Difference Difficulty']).mean()
-    print(f"Mean Absolute Difference Discrimination: {diff_disc:.4f}")
-    print(f"Mean Absolute Difference Difficulty: {diff_diff:.4f}")
+    diff_disc = np.abs(df_results['Difference Discrimination']).mean()
+    print(f"Mean Absolute Difference Difficulty: {diff_disc:.4f}")
+    print(f"Mean Absolute Difference Discrimination: {diff_diff:.4f}")
     plt.figure(figsize=(10, 5))
-    plt.plot(df_results['Actual Discrimination'], label='Actual Discrimination')
-    plt.plot(df_results['Predicted Discrimination'], label='Predicted Discrimination')  
+    plt.plot(df_results['Actual Difficulty'], label='Actual Difficulty')
+    plt.plot(df_results['Predicted Difficulty'], label='Predicted Diffculty')  
     plt.xlabel('Index')
-    plt.ylabel('Discrimination')
-    plt.title('Actual vs. Predicted Discrimination')
+    plt.ylabel('Difficulty')
+    plt.title('Actual vs. Predicted Difficulty')
     plt.legend()
     plt.show()
 
     plt.figure(figsize=(10, 5))
-    plt.plot(df_results['Actual Difficulty'], label='Actual Difficulty')
-    plt.plot(df_results['Predicted Difficulty'], label='Predicted Difficulty')
+    plt.plot(df_results['Actual Discrimination'], label='Actual discrimination')
+    plt.plot(df_results['Predicted Discrimination'], label='Predicted discrimination')
     plt.xlabel('Index')
-    plt.ylabel('Difficulty')
-    plt.title('Actual vs. Predicted Difficulty')
+    plt.ylabel('Discrimination')
+    plt.title('Actual vs. Predicted discrimination')
     plt.legend()
     plt.show()
     return model_cen

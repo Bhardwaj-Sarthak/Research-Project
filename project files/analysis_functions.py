@@ -26,8 +26,7 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score
 from scipy.stats import randint
 from sklearn.feature_selection import SelectFromModel
 from sklearn.decomposition import PCA
-
-
+from sklearn.metrics import r2_score
 
 
 def print_lasso(comb_data, y):
@@ -48,7 +47,7 @@ def print_lasso(comb_data, y):
         print(f"Mean Squared Error: {mean_squared_error(y_test, lasso_cv_uns.predict(X_test))}")
         print(f"R^2 score: {lasso_cv_uns.score(X_test, y_test)}")
         print(f"_ _ "*10)
-        alphas_lasso, coefs_lasso, _ = lasso_path(X_train, y_train, alphas=alphas)
+        #alphas_lasso, coefs_lasso, _ = lasso_path(X_train, y_train, alphas=alphas)
         #plt.figure(figsize=(10, 10))
         #for i in range(coefs_lasso.shape[0]):
         #    plt.plot(alphas_lasso, coefs_lasso[i], label=f"Feature {i+1}")
@@ -68,7 +67,7 @@ def print_lasso(comb_data, y):
         print(f"R^2 score: {lasso_cv_uns.score(X_test_scaled, y_test)}")
         print(f"_ _ "*10)
         print(f" _ _"*10)
-        alphas_lasso, coefs_lasso, _ = lasso_path(X_train, y_train, alphas=alphas)
+        #alphas_lasso, coefs_lasso, _ = lasso_path(X_train, y_train, alphas=alphas)
         #plt.figure(figsize=(10, 10))
         #for i in range(coefs_lasso.shape[0]):
         #    plt.plot(alphas_lasso, coefs_lasso[i], label=f"Feature {i+1}")
@@ -163,7 +162,7 @@ def print_random_forest(comb_data, y):
         rf.fit(X_train, y_train)
         y_pred = rf.predict(X_test)
         print(f"Mean Squared Error: {mean_squared_error(y_test, y_pred)}")
-        print(f'R^2 value: {rf.r2_score(y_pred, y_test)}')
+        print(f'R^2 value: {rf.score(X_test, y_test)}')
         print(f"_ _ "*10)
         # Tuned Model
         n_estimators = [int(x) for x in np.linspace(start = 200, stop = 2000, num = 10)]
@@ -184,7 +183,7 @@ def print_random_forest(comb_data, y):
         rf_random.fit(X_train, y_train)
         y_pred = rf_random.predict(X_test)
         print(f"Mean Squared Error of Hypertuned Model: {mean_squared_error(y_test, y_pred)}")
-        print(f'R^2 value of Hypertuned Model: {rf.r2_score(y_pred, y_test)}')
+        print(f'R^2 value of Hypertuned Model: {rf.score(X_test, y_test)}')
         print(f"_ _ "*10)
         # PCA
         scaler = StandardScaler()
@@ -203,7 +202,7 @@ def print_random_forest(comb_data, y):
         rf.fit(X_train_pca, y_train)
         y_pred = rf.predict(X_test_pca)
         print(f"Mean Squared Error of PCA Model: {mean_squared_error(y_test, y_pred)}")
-        print(f'R^2 value of Hypertuned Model: {rf.r2_score(y_pred, y_test)}')
+        print(f'R^2 value of Hypertuned Model: {rf.score(X_test_pca, y_test)}')
         print(f"_ _ "*10)
         print(f" _ _"*10)
     print(f"_________________________________________________________")
@@ -213,8 +212,8 @@ def print_SVR(comb_data, y):
         X=dat     
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
         scaler = StandardScaler()
-        X_train_scaled = scaler.fit_transform(X_train)
-        X_test_scaled = scaler.transform(X_test)
+        #X_train_scaled = scaler.fit_transform(X_train)
+        #X_test_scaled = scaler.transform(X_test)
         kernel_functions = ['linear', 'rbf']
         for i, kernel in enumerate(kernel_functions, 1):
             print (kernel_functions[i-1])
@@ -222,7 +221,7 @@ def print_SVR(comb_data, y):
             svr_classifier.fit(X_train, y_train)
             y_pred = svr_classifier.predict(X_test)
             print(f"Mean Squared Error: {mean_squared_error(y_test, y_pred)}")
-            print(f'R^2 value: {svr_classifier.r2_score(y_pred, y_test)}')
+            print(f'R^2 value: {svr_classifier.score(X_test, y_test)}')
             print(f"_ _ "*10)
             # Hypertuned Model
             param_grid = {'linear': {'C': [0.1, 1, 10, 100]},'rbf': {'C': [0.1, 1, 10, 100], 'gamma': ['scale', 'auto', 0.01, 0.1, 1], 'epsilon': [0.01, 0.1, 0.5, 1]} }
@@ -234,7 +233,7 @@ def print_SVR(comb_data, y):
             best_model = grid_search.best_estimator_
             y_pred = best_model.predict(X_test)
             print(f"Mean Squared Error of Hypertuned Model: {mean_squared_error(y_test, y_pred)}")
-            print(f'R^2 value of Hypertuned Model: {svr.r2_score(y_pred, y_test)}')
+            print(f'R^2 value of Hypertuned Model: {best_model.score(X_test, y_test)}')
             print(f"Best parameters for {kernel} kernel {grid_search.best_params_}")
             print(f"_ _ "*10)
             print(f" _ _"*10)
@@ -243,6 +242,7 @@ def print_SVR(comb_data, y):
 def print_SVM(comb_data, y):
     for dat in (comb_data):
         X=dat     
+        y=pd.qcut(y, q=5, labels=[0, 1, 2, 3,4])
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
         scaler = StandardScaler()
         X_train_scaled = scaler.fit_transform(X_train)
@@ -263,6 +263,7 @@ def print_SVM(comb_data, y):
 def print_Random_Forest_Classification(comb_data, y):
     for dat in (comb_data):
         X=dat     
+        y=pd.qcut(y, q=5, labels=[0, 1, 2, 3,4])
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
         rf = RandomForestClassifier(random_state=42)
         rf.fit(X_train, y_train)
@@ -296,8 +297,9 @@ def print_Random_Forest_Classification(comb_data, y):
         print(f"Accuracy Hypertuned Model: {metrics.accuracy_score(y_test, y_pred)}")
         print(f"_ _ "*10)
         # Feature Importance
-        importances = rf.feature_importances_
-        selector = SelectFromModel(rf, prefit=True, threshold="mean")
+        best_rf = rand_search.best_estimator_
+        importances = best_rf.feature_importances_
+        selector = SelectFromModel(best_rf, prefit=True, threshold="mean")
         X_train_reduced = selector.transform(X_train)
         X_test_reduced = selector.transform(X_test)
         rf_reduced = RandomForestClassifier( random_state=42)
@@ -330,7 +332,5 @@ def print_Random_Forest_Classification(comb_data, y):
         print(f"_ _ "*10)
     print(f"_________________________________________________________")
     
-
-
 
         
